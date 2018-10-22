@@ -33,7 +33,7 @@ def plot_confusion_matrix(cm, classes,
     plt.title(title)
     plt.colorbar()
     tick_marks = np.arange(len(classes))
-    plt.xticks(tick_marks, classes, rotation=45)
+    plt.xticks(tick_marks, classes, rotation=90)
     plt.yticks(tick_marks, classes)
 
     if normalize:
@@ -86,6 +86,7 @@ def make_cm_generator(images_path,
                       normalize=False,
                       bias_tuple=(),  # eg ('dog',0.3) i.e bias at 30% probability for dog class
                       class_name_dict=None,  # eg {'dog': 0, 'cat': 1}
+                      fig_size=(8, 8)
                       ):
     """ Generates confusion matrix and classification report using keras generator
 
@@ -179,7 +180,7 @@ def make_cm_generator(images_path,
     print(classification_report(y_true=classes_GT, y_pred=classes_predicted, target_names=target_names))
     print('\n The confusion matrix generated using scikit learn library is printed below \n')
     cm = confusion_matrix(y_true=classes_GT, y_pred=classes_predicted)
-    plt.figure()
+    plt.figure(figsize=fig_size)
     plot_confusion_matrix(cm, classes=class_names, normalize=normalize,
                           title='Confusion matrix')
     plt.show()
