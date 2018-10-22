@@ -84,7 +84,8 @@ def make_cm_generator(images_path,
                       batch_size=16,
                       preprocessing_function=None,
                       normalize=False,
-                      bias_tuple=()  # eg ('dog',0.3) i.e bias at 30% probability for dog class
+                      bias_tuple=(),  # eg ('dog',0.3) i.e bias at 30% probability for dog class
+                      class_name_dict=None,  # eg {'dog': 0, 'cat': 1}
                       ):
     """ Generates confusion matrix and classification report using keras generator
 
@@ -102,6 +103,7 @@ def make_cm_generator(images_path,
     bias_tuple -- tuple: Optional argument if you want to be biased towards a particular class (Default () 'empty')
                          Example: ('dog',0.3) i.e Infer as 'dog' class
                                   if the probability is 0.3 or greater in the prediction
+    class_name_dict -- dict: Optional class name dictionary to use. eg {'dog': 0, 'cat': 1}
 
     Output:
     Returns a Dataframe in the following format. and saves the same as a pickle file
@@ -133,7 +135,8 @@ def make_cm_generator(images_path,
     # this is an important step else there is a difference in result between predict and predict_generator
     test_generator.reset()  # reset to start with sample 0
     nb_samples = test_generator.samples
-    class_name_dict = test_generator.class_indices  # eg {'dog': 0, 'cat': 1}
+    if not class_name_dict:
+        class_name_dict = test_generator.class_indices  # eg {'dog': 0, 'cat': 1}
     print(class_name_dict)
     # predict
     predictions = loaded_model.predict_generator(test_generator,
